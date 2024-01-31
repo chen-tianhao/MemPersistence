@@ -9,7 +9,7 @@ namespace Microsoft.Data.Sqlite
         {
         }
 
-        public void SaveAs(SqliteConnection destination, bool autoClose = false)
+        public void SaveAs(MyPersistance destination, bool destinationAutoClose = false)
         {
             string destinationName = "main";
             string sourceName = "main";
@@ -45,7 +45,7 @@ namespace Microsoft.Data.Sqlite
             }
             finally
             {
-                if (close && autoClose)
+                if (close && destinationAutoClose)
                 {
                     destination.Close();
                 }

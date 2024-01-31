@@ -4,19 +4,19 @@ class Program
 {
     static void Main()
     {
-        //SaveDatabase();
-        LoadDatabase();
+        SaveSnapshot();
+        LoadSnapshot();
     }
-    static void SaveDatabase()
+    static void SaveSnapshot()
     {
-        string inMemoryConnectionString = "Data Source=:memory:";
-        string fileConnectionString = "Data Source=mydatabase.db";
+        string memConnectionString = "Data Source=:memory:";
+        string discConnectionString = "Data Source=SimSnapshot.db";
 
-        using (var inMemoryConnection = new MyPersistance(inMemoryConnectionString))
+        using (var memInstance = new MyPersistance(memConnectionString))
         {
-            inMemoryConnection.Open();
+            memInstance.Open();
 
-            using (var command = inMemoryConnection.CreateCommand())
+            using (var command = memInstance.CreateCommand())
             {
                 command.CommandText = "CREATE TABLE MyTable (Column1 TEXT, Column2 TEXT)";
                 command.ExecuteNonQuery();
@@ -25,13 +25,13 @@ class Program
                 command.ExecuteNonQuery();
             }
 
-            var fileConnection = new MyPersistance(fileConnectionString);
-            inMemoryConnection.BackupDatabase(fileConnection);
+            var fileConnection = new MyPersistance(discConnectionString);
+            memInstance.SaveAs(fileConnection, true);
         }
         Console.WriteLine("Data persisted successfully.");
     }
 
-    static void LoadDatabase()
+    static void LoadSnapshot()
     {
         string fileConnectionString = "Data Source=myDatabaseOnDisk.db";
         string inMemoryConnectionString = "Data Source=:memory:";
@@ -50,7 +50,6 @@ class Program
         var memConnection = new MyPersistance(inMemoryConnectionString);
         diskConnection.SaveAs(memConnection);
         diskConnection.Close();
-        Console.WriteLine("Data persisted successfully.");
 
         memConnection.Open();
         ReadDataCommon("select * from MyTable;", memConnection);
