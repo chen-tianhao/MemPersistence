@@ -3,13 +3,13 @@ using static SQLitePCL.raw;
 
 namespace Microsoft.Data.Sqlite
 {
-    public class MyPersistance : SqliteConnection
+    public class O2desPersistance : SqliteConnection
     {
-        public MyPersistance(string? connectionString) : base(connectionString)
+        public O2desPersistance(string? connectionString) : base(connectionString)
         {
         }
 
-        public void SaveAs(MyPersistance destination, bool destinationAutoClose = false)
+        public void SaveAs(O2desPersistance destination, bool destinationAutoClose = false)
         {
             string destinationName = "main";
             string sourceName = "main";

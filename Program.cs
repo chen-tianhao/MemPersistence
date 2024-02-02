@@ -12,7 +12,7 @@ class Program
         string memConnectionString = "Data Source=:memory:";
         string discConnectionString = "Data Source=SimSnapshot.db";
 
-        using (var memInstance = new MyPersistance(memConnectionString))
+        using (var memInstance = new O2desPersistance(memConnectionString))
         {
             memInstance.Open();
 
@@ -25,7 +25,7 @@ class Program
                 command.ExecuteNonQuery();
             }
 
-            var fileConnection = new MyPersistance(discConnectionString);
+            var fileConnection = new O2desPersistance(discConnectionString);
             memInstance.SaveAs(fileConnection, true);
         }
         Console.WriteLine("Data persisted successfully.");
@@ -36,7 +36,7 @@ class Program
         string fileConnectionString = "Data Source=myDatabaseOnDisk.db";
         string inMemoryConnectionString = "Data Source=:memory:";
 
-        var diskConnection = new MyPersistance(fileConnectionString);
+        var diskConnection = new O2desPersistance(fileConnectionString);
         diskConnection.Open();
         using (var command = diskConnection.CreateCommand())
         {
@@ -47,7 +47,7 @@ class Program
             command.ExecuteNonQuery();
         }
 
-        var memConnection = new MyPersistance(inMemoryConnectionString);
+        var memConnection = new O2desPersistance(inMemoryConnectionString);
         diskConnection.SaveAs(memConnection);
         diskConnection.Close();
 
@@ -58,7 +58,7 @@ class Program
     }
 
     // 从表中读取数据(通用)
-    static void ReadDataCommon(string sql, MyPersistance connection)
+    static void ReadDataCommon(string sql, O2desPersistance connection)
     {
         using (var command = connection.CreateCommand())
         {
