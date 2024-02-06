@@ -3,13 +3,13 @@ using static SQLitePCL.raw;
 
 namespace Microsoft.Data.Sqlite
 {
-    public class O2desPersistance : SqliteConnection
+    public class O2desBuiltInDatabase : SqliteConnection
     {
-        public O2desPersistance(string? connectionString) : base(connectionString)
+        public O2desBuiltInDatabase(string? connectionString) : base(connectionString)
         {
         }
 
-        public void SaveAs(O2desPersistance destination, bool destinationAutoClose = false)
+        public void SaveAs(O2desBuiltInDatabase destination, bool destinationAutoClose = false)
         {
             string destinationName = "main";
             string sourceName = "main";
@@ -50,6 +50,26 @@ namespace Microsoft.Data.Sqlite
                     destination.Close();
                 }
             }
+        }
+
+        public void ReadDataCommon(string sql)
+        {
+            var command = CreateCommand();
+            command.CommandText = sql;
+            Console.WriteLine($">> {command.CommandText}");
+
+            var reader = command.ExecuteReader();
+            int numOfRows = 0;
+            while (reader.Read())
+            {
+                numOfRows++;
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    Console.Write($"{reader.GetString(i)},\t");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine($"{numOfRows} rows selected.");
         }
     }
 }
